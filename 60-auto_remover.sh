@@ -41,7 +41,7 @@ if [ \${USAGE_INT} -gt \${MAX_USAGE} ]; then
                 break;
         done
 
-        find \${TARGET_PATH} -empty -type d -delete -print
+        find \${TARGET_PATH} -mindepth 1 -empty -type d -delete -print
 
 else
         echo \${TARGET_PATH}=\$USAGE_INT%
