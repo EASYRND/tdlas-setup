@@ -69,24 +69,6 @@ export TDLAS_DISPLAY_ROTATE=$DISPLAY_ROTATE
 #GUI
 echo -n "GUI 개발 환경을 설정하시겠습니까? (y/n): "
 read -r ALLOW_GUI
-case "${ALLOW_GUI,,}" in
-    y|yes)
-        echo "GUI 설정을 시작합니다. gui.sh를 호출합니다..."
-
-        if [ -f "./gui.sh"; then
-            chmod +x ./gui.sh
-            ./gui.sh
-        else
-            echo "❌ 에러: 같은 디렉토리에 gui.sh 파일이 없습니다."
-        fi
-        ;;
-    n|no)
-        echo "🚫 GUI 설정을 취소했습니다. 기존 서버 모드를 유지합니다."
-        ;;
-    *)
-        echo "⚠️ 잘못된 입력입니다. y 또는 n을 입력해 주세요."
-        ;;
-esac
 
 # 파일명 앞 2자리가 숫자인 .sh 파일을 찾아서 정렬
 # sort -V 옵션은 01, 05, 10 순서와 같이 자연스러운 버전 정렬을 수행합니다.
@@ -106,6 +88,25 @@ for script in $(ls | grep '^[0-9][0-9]-.*\.sh' | grep -v '\.cpt$' | sort -V); do
     echo "--- $script 실행 완료 ---"
     echo ""
 done
+
+case "${ALLOW_GUI,,}" in
+    y|yes)
+        echo "GUI 설정을 시작합니다. gui.sh를 호출합니다..."
+
+        if [ -f "./gui.sh"; then
+            chmod +x ./gui.sh
+            ./gui.sh
+        else
+            echo "❌ 에러: 같은 디렉토리에 gui.sh 파일이 없습니다."
+        fi
+        ;;
+    n|no)
+        echo "🚫 GUI 설정을 취소했습니다. 기존 서버 모드를 유지합니다."
+        ;;
+    *)
+        echo "⚠️ 잘못된 입력입니다. y 또는 n을 입력해 주세요."
+        ;;
+esac
 
 echo "=========================================="
 echo "=== 모든 스크립트 실행이 완료되었습니다 ==="
