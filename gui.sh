@@ -6,6 +6,7 @@ cd "$(dirname "$0")"
 sudo apt update && sudo apt upgrade -y
 sudo apt install --no-install-recommends ubuntu-desktop
 sudo systemctl set-default graphical.target
+sudo apt install -y gnome-terminal
 
 #자동부팅
 sudo sed -i '/AutomaticLogin/d' /etc/gdm3/custom.conf
