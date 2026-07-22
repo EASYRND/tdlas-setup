@@ -11,7 +11,7 @@ SendSIGKILL=no
 Restart=on-failure
 RestartSec=5s
 StandardOutput=tty
-TTYPath=/dev/tty2
+TTYPath=/dev/tty4
 
 [Install]
 WantedBy=multi-user.target 

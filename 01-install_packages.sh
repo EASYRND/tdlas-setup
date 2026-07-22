@@ -16,6 +16,14 @@ packages=(
     libgpiod-dev
     gpiod
     libncurses-dev
+    ubuntu-desktop
+    qt6-base-dev
+    qt6-base-dev-tools
+    qt6-declarative-dev
+    qt6-l10n-tools
+    qtcreator
+    cage
+    qt6-wayland
 )
 
 for package in "${packages[@]}"; do
