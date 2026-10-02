@@ -4,10 +4,8 @@ AUTOREMOVER_PATH="/opt/tdlas/auto_remover.sh"
 
 if [ -f "$AUTOREMOVER_PATH" ]; then
     echo "$AUTOREMOVER_PATH does exist."
-    exit 0
-fi
-
-sudo tee "$AUTOREMOVER_PATH" > /dev/null <<EOF
+else
+    sudo tee "$AUTOREMOVER_PATH" > /dev/null <<EOF
 #!/bin/bash
 TARGET_PATH=/mnt/nvme/
 DISK_USAGE=\`df \${TARGET_PATH} | grep -v Use | awk '{print \$5}'\`
@@ -48,10 +46,25 @@ else
 fi
 
 EOF
+fi
 
 sudo chmod +x "$AUTOREMOVER_PATH"
 sudo chown root:root "$AUTOREMOVER_PATH"
 
-if ! sudo crontab -l 2>/dev/null | grep -q "$AUTOREMOVER_PATH"; then
-    (sudo crontab -l 2>/dev/null; echo "*/10 * * * * $AUTOREMOVER_PATH") | sudo crontab -
+if ! command -v flock >/dev/null 2>&1; then
+    echo "flock is not installed. Installing util-linux..."
+    if ! sudo apt-get install -y util-linux; then
+        echo "Failed to install util-linux. Aborting cron configuration."
+        exit 1
+    fi
+fi
+
+CRON_ENTRY="* * * * * flock -n /run/lock/tdlas-auto-remover.lock $AUTOREMOVER_PATH"
+CURRENT_CRONTAB=$(sudo crontab -l 2>/dev/null || true)
+
+if ! printf '%s\n' "$CURRENT_CRONTAB" | grep -Fqx "$CRON_ENTRY"; then
+    printf '%s\n' "$CURRENT_CRONTAB" | grep -v -F "$AUTOREMOVER_PATH" | {
+        cat
+        printf '%s\n' "$CRON_ENTRY"
+    } | sudo crontab -
 fi

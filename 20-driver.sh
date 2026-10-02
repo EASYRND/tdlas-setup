@@ -12,7 +12,7 @@ fi
 
 cd ./temp
 
-mv "../${DRIVER_FILENAME}" .
+cp -v "../${DRIVER_FILENAME}" .
 
 #압축해제
 if [ ! -d "linux-arm-v8" ]; then
