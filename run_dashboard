@@ -2,11 +2,36 @@
 
 ORIGINAL_FONT="Lat15-Terminus16"
 TARGET_FONT="Lat15-Terminus28x14"
+TDLAS_CONFIG_PATH="/etc/opt/tdlas/tdlas.config"
 
 dmesg -n 3
 
-#1: 90, 2: 180
-echo 1 > /sys/class/graphics/fbcon/rotate_all
+# 설정파일에서 DISPLAY_ROTATE 값 읽기
+DISPLAY_ROTATE=0
+if [ -f "$TDLAS_CONFIG_PATH" ]; then
+    DISPLAY_ROTATE=$(grep "^DISPLAY_ROTATE=" "$TDLAS_CONFIG_PATH" | cut -d'=' -f2 || echo "0")
+fi
+
+# 디스플레이 회전 각도 변환: 0, 90, 180, 270 -> 0, 1, 2, 3
+case "${DISPLAY_ROTATE}" in
+    0)
+        ROTATE_VALUE=0
+        ;;
+    90)
+        ROTATE_VALUE=1
+        ;;
+    180)
+        ROTATE_VALUE=2
+        ;;
+    270)
+        ROTATE_VALUE=3
+        ;;
+    *)
+        ROTATE_VALUE=0
+        ;;
+esac
+
+echo "$ROTATE_VALUE" > /sys/class/graphics/fbcon/rotate_all
 
 setfont "$TARGET_FONT"
 

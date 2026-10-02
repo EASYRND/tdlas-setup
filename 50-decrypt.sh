@@ -19,23 +19,25 @@ if [ -f "51-sources.sh" ]; then
     chmod +x "./temp/51-sources.sh"
     ./temp/51-sources.sh
 
-    cd ~/sources/das
-    mkdir build
-    cd build
-    cmake -S .. -B . -D CMAKE_BUILD_TYPE=Release
-    make
-    sudo make install
-    sudo ln -s /opt/tdlas/das /bin/das
-    sudo ln -s /opt/tdlas/broadcast_receiver /bin/broadcast_receiver
+    if [[ "${TDLAS_TYPE}" = "das" || "${TDLAS_TYPE}" = "DAS" ]]; then
+        cd ~/sources/das
+        mkdir build
+        cd build
+        cmake -S .. -B . -D CMAKE_BUILD_TYPE=Release
+        make -j4
+        sudo make install
+        sudo ln -sf /opt/tdlas/das /usr/local/bin/das
+        sudo ln -sf /opt/tdlas/broadcast_receiver /usr/local/bin/broadcast_receiver
+    fi
 
     if [[ "${TDLAS_TYPE}" = "wms" || "${TDLAS_TYPE}" = "WMS" ]]; then
         cd ~/sources/cfwms
         mkdir build
         cd build
         cmake -S .. -B . -D CMAKE_BUILD_TYPE=Release
-        make
+        make -j4
         sudo make install
-        sudo ln -s /opt/tdlas/cfwms /bin/cfwms
+        sudo ln -sf /opt/tdlas/cfwms /usr/local/bin/cfwms
     fi
 
     if [[ "${TDLAS_TYPE}" = "tdlas" || "${TDLAS_TYPE}" = "TDLAS" ]]; then
@@ -43,10 +45,10 @@ if [ -f "51-sources.sh" ]; then
         mkdir build
         cd build
         cmake -S .. -B . -D CMAKE_BUILD_TYPE=Release
-        make
+        make -j4
         sudo make install
-        sudo ln -s /opt/tdlas/tdlas /bin/tdlas
-        sudo ln -s /opt/tdlas/dashboard /bin/tdlasinfo
-        sudo ln -s /opt/tdlas/broadcast_receiver /bin/tdlasbr
+        sudo ln -sf /opt/tdlas/tdlas /usr/local/bin/tdlas
+        sudo ln -sf /opt/tdlas/dashboard /usr/local/bin/tdlasinfo
+        sudo ln -sf /opt/tdlas/broadcast_receiver /usr/local/bin/tdlasbr
     fi
 fi

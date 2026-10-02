@@ -1,9 +1,19 @@
 #!/bin/bash
 
+TDLAS_CONFIG_PATH="/etc/opt/tdlas/tdlas.config"
+
 if [ "${TDLAS_SETUP}" = "true" ]; then
     angle="${TDLAS_DISPLAY_ROTATE}"
 else
-    read -p "Enter the rotation angle (0, 90, 180, 270): " angle
+    # 설정파일에서 값 읽기 시도
+    if [ -f "$TDLAS_CONFIG_PATH" ]; then
+        angle=$(grep "^DISPLAY_ROTATE=" "$TDLAS_CONFIG_PATH" | cut -d'=' -f2 || echo "")
+    fi
+    
+    # 설정파일에서 값을 못 읽었으면 사용자 입력
+    if [ -z "$angle" ]; then
+        read -p "Enter the rotation angle (0, 90, 180, 270): " angle
+    fi
 fi
 
 case "$angle" in

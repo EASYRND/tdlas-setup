@@ -12,7 +12,7 @@ cd "$TARGET_DIR"
 mkdir build
 cd build
 cmake ..
-sudo make install
+sudo make -j4 install
 
 LOG_PATH="/var/log/tdlas"
 PROGRAM_USER="easyrnd"
